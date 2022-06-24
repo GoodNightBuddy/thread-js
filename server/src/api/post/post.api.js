@@ -30,7 +30,11 @@ const initPost = (fastify, opts, done) => {
 
       if (reaction.post && reaction.post.userId !== req.user.id) {
         // notify a user if someone (not himself) liked his post
-        req.io.to(reaction.post.userId).emit('like', 'Your post was liked!');
+        if (reaction.isLike) {
+          req.io.to(reaction.post.userId).emit('like', 'Your post was liked!');
+        } else if (reaction.isDislike) {
+          req.io.to(reaction.post.userId).emit('dislike', 'Your post was disliked...');
+        }
       }
       return reaction;
     }

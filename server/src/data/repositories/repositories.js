@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import {
   Comment as CommentModel,
   User as UserModel,

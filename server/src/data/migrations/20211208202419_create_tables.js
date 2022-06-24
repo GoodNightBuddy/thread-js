@@ -12,6 +12,7 @@ const ColumnName = {
   EMAIL: 'email',
   ID: 'id',
   IS_LIKE: 'is_like',
+  IS_DISLIKE: 'is_dislike',
   LINK: 'link',
   PASSWORD: 'password',
   UPDATED_AT: 'updated_at',
@@ -45,6 +46,7 @@ export async function up(knex) {
   await knex.schema.createTable(TableName.POST_REACTIONS, table => {
     table.increments(ColumnName.ID).primary();
     table.boolean(ColumnName.IS_LIKE).notNullable().defaultTo(true);
+    table.boolean(ColumnName.IS_DISLIKE).notNullable().defaultTo(false);
     table.dateTime(ColumnName.CREATED_AT).notNullable().defaultTo(knex.fn.now());
     table.dateTime(ColumnName.UPDATED_AT).notNullable().defaultTo(knex.fn.now());
   });
