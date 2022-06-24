@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ActionType } from './common.js';
 
@@ -53,13 +54,23 @@ const toggleExpandedPost = createAsyncThunk(
 const likePost = createAsyncThunk(
   ActionType.REACT,
   async (postId, { getState, extra: { services } }) => {
-    const { id } = await services.post.likePost(postId);
-    const diff = id ? 1 : -1; // if ID exists then the post was liked, otherwise - like was removed
+    const response = await services.post.likePost(postId);
+    const diff = response.id ? 1 : -1; // if ID exists then the post was liked, otherwise - like was removed
 
-    const mapLikes = post => ({
-      ...post,
-      likeCount: Number(post.likeCount) + diff // diff is taken from the current closure
-    });
+    let mapLikes;
+
+    if (response.isSwitched) {
+      mapLikes = post => ({
+        ...post,
+        likeCount: Number(post.likeCount) + diff, // diff is taken from the current closure
+        dislikeCount: Number(post.dislikeCount) - 1 // put away dislike if it exists
+      });
+    } else {
+      mapLikes = post => ({
+        ...post,
+        likeCount: Number(post.likeCount) + diff // diff is taken from the current closure
+      });
+    }
 
     const {
       posts: { posts, expandedPost }
@@ -69,6 +80,43 @@ const likePost = createAsyncThunk(
     ));
     const updatedExpandedPost = expandedPost?.id === postId
       ? mapLikes(expandedPost)
+      : undefined;
+
+    return { posts: updated, expandedPost: updatedExpandedPost };
+  }
+);
+
+// I know that the code is repeated, but how to make it better and(!) clearer - nedokumekal
+
+const dislikePost = createAsyncThunk(
+  ActionType.REACT,
+  async (postId, { getState, extra: { services } }) => {
+    const response = await services.post.dislikePost(postId);
+    const diff = response.id ? 1 : -1; // if ID exists then the post was liked, otherwise - like was removed
+
+    let mapDislikes;
+
+    if (response.isSwitched) {
+      mapDislikes = post => ({
+        ...post,
+        dislikeCount: Number(post.dislikeCount) + diff, // diff is taken from the current closure
+        likeCount: Number(post.likeCount) - 1 // put away dislike if it exists
+      });
+    } else {
+      mapDislikes = post => ({
+        ...post,
+        dislikeCount: Number(post.dislikeCount) + diff // diff is taken from the current closure
+      });
+    }
+
+    const {
+      posts: { posts, expandedPost }
+    } = getState();
+    const updated = posts.map(post => (
+      post.id !== postId ? post : mapDislikes(post)
+    ));
+    const updatedExpandedPost = expandedPost?.id === postId
+      ? mapDislikes(expandedPost)
       : undefined;
 
     return { posts: updated, expandedPost: updatedExpandedPost };
@@ -109,5 +157,6 @@ export {
   createPost,
   toggleExpandedPost,
   likePost,
+  dislikePost,
   addComment
 };

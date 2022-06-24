@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import {
   ApiPath,
   PostsApiPath,
@@ -43,7 +44,23 @@ class Post {
         contentType: ContentType.JSON,
         payload: JSON.stringify({
           postId,
-          isLike: true
+          isLike: true,
+          isDislike: false
+        })
+      }
+    );
+  }
+
+  dislikePost(postId) {
+    return this._http.load(
+      `${this._apiPath}${ApiPath.POSTS}${PostsApiPath.REACT}`,
+      {
+        method: HttpMethod.PUT,
+        contentType: ContentType.JSON,
+        payload: JSON.stringify({
+          postId,
+          isLike: false,
+          isDislike: true
         })
       }
     );

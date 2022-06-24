@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import { Model } from 'objection';
 
 import { DbTableName } from '../../../common/enums/enums.js';
@@ -15,10 +16,11 @@ class PostReaction extends AbstractModel {
 
     return {
       type: baseSchema.type,
-      required: ['isLike', 'userId', 'postId'],
+      required: ['userId', 'isLike', 'isDislike', 'postId'],
       properties: {
         ...baseSchema.properties,
         isLike: { type: 'boolean' },
+        isDislike: { type: 'boolean' },
         postId: { type: ['integer', 'null'] },
         userId: { type: ['integer', 'null'] }
       }
