@@ -67,6 +67,16 @@ const Thread = () => {
     [dispatch]
   );
 
+  const handleUpdatedPost = useCallback(
+    id => dispatch(threadActionCreator.updatePost(id)),
+    [dispatch]
+  );
+
+  const handlePostDelete = useCallback(id => {
+    dispatch(threadActionCreator.deletePost(id));
+    handlePostsLoad({ userId: postsFilter.userId, from: 0, count: postsFilter.from });
+  }, [dispatch, handlePostsLoad]);
+
   const handleExpandedPostToggle = useCallback(
     id => dispatch(threadActionCreator.toggleExpandedPost(id)),
     [dispatch]
@@ -124,10 +134,13 @@ const Thread = () => {
         {posts.map(post => (
           <Post
             post={post}
+            userId={userId}
             onPostLike={handlePostLike}
             onPostDislike={handlePostDislike}
             onExpandedPostToggle={handleExpandedPostToggle}
             onSharePost={handleSharePost}
+            onEditPost={handleUpdatedPost}
+            onDeletePost={handlePostDelete}
             key={post.id}
           />
         ))}
