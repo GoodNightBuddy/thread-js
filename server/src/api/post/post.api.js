@@ -23,6 +23,22 @@ const initPost = (fastify, opts, done) => {
     }
   });
   fastify.route({
+    method: HttpMethod.DELETE,
+    url: PostsApiPath.$ID,
+    [ControllerHook.HANDLER]: async req => {
+      const reaction = await postService.deletePostById(req.params.id);
+      return reaction;
+    }
+  });
+  fastify.route({
+    method: HttpMethod.PUT,
+    url: PostsApiPath.$ID,
+    [ControllerHook.HANDLER]: async req => {
+      const reaction = await postService.updatePostById(req.params.id, req.body);
+      return reaction;
+    }
+  });
+  fastify.route({
     method: HttpMethod.PUT,
     url: PostsApiPath.REACT,
     [ControllerHook.HANDLER]: async req => {
