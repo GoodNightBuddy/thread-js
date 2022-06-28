@@ -13,6 +13,14 @@ class Post {
     return this._postRepository.getPostById(id);
   }
 
+  deletePostById(id) {
+    return this._postRepository.deleteById(id);
+  }
+
+  updatePostById(id, { imageId, body }) {
+    return this._postRepository.updateById(id, { imageId, body });
+  }
+
   create(userId, post) {
     return this._postRepository.create({
       ...post,
