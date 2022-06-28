@@ -65,6 +65,31 @@ class Post {
       }
     );
   }
+
+  deletePost(postId) {
+    this._http.load(
+      `${this._apiPath}${ApiPath.POSTS}${PostsApiPath.ROOT}${postId}`,
+      {
+        method: HttpMethod.DELETE
+      }
+    );
+    const postsFilter = {
+      userId: undefined,
+      from: 0,
+      count: 10
+    };
+
+    const result = this.getAllPosts(postsFilter);
+    return result;
+  }
+
+  updatePost(payload) {
+    return this._http.load(`${this._apiPath}${ApiPath.POSTS}${PostsApiPath.ROOT}${payload.id}`, {
+      method: HttpMethod.PUT,
+      contentType: ContentType.JSON,
+      payload: JSON.stringify(payload)
+    });
+  }
 }
 
 export { Post };

@@ -7,7 +7,16 @@ import { IconButton, Image } from 'components/common/common';
 
 import styles from './styles.module.scss';
 
-const Post = ({ post, onPostLike, onPostDislike, onExpandedPostToggle, onSharePost }) => {
+const Post = ({
+  post,
+  onPostLike,
+  onPostDislike,
+  onExpandedPostToggle,
+  onSharePost,
+  onEditPost,
+  userId,
+  onDeletePost
+}) => {
   const {
     id,
     image,
@@ -24,6 +33,8 @@ const Post = ({ post, onPostLike, onPostDislike, onExpandedPostToggle, onSharePo
   const handlePostDislike = () => onPostDislike(id);
   const handleExpandedPostToggle = () => onExpandedPostToggle(id);
   const handleSharePost = () => onSharePost(id);
+  const handleEditPost = () => onEditPost(id);
+  const handleDeletePost = () => onDeletePost(id);
 
   return (
     <div className={styles.card}>
@@ -54,6 +65,20 @@ const Post = ({ post, onPostLike, onPostDislike, onExpandedPostToggle, onSharePo
           iconName={IconName.SHARE_ALTERNATE}
           onClick={handleSharePost}
         />
+        {user.id === userId
+          ? (
+            <>
+              <IconButton
+                iconName={IconName.EDIT_POST}
+                onClick={handleEditPost}
+              />
+              <IconButton
+                iconName={IconName.DELETE_POST}
+                onClick={handleDeletePost}
+              />
+            </>
+          )
+          : null}
       </div>
     </div>
   );
@@ -64,7 +89,10 @@ Post.propTypes = {
   onPostLike: PropTypes.func.isRequired,
   onPostDislike: PropTypes.func.isRequired,
   onExpandedPostToggle: PropTypes.func.isRequired,
-  onSharePost: PropTypes.func.isRequired
+  onSharePost: PropTypes.func.isRequired,
+  onEditPost: PropTypes.func.isRequired,
+  userId: PropTypes.number.isRequired,
+  onDeletePost: PropTypes.func.isRequired
 };
 
 export { Post };
